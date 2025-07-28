@@ -6,6 +6,7 @@ import com.lms.lms.exception.ResourceNotFoundException;
 import com.lms.lms.repo.QuestionRepository;
 import com.lms.lms.repo.QuizRepository;
 import com.lms.lms.services.QuestionService;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,9 +47,15 @@ public class QuestionServiceImpl implements QuestionService {
     public Question update(Long id, Question question) {
         if (id == null) throw new IllegalArgumentException("Question ID must not be null for update");
         Question existing = getById(id);
-        existing.setText(question.getText());
-        existing.setMarks(question.getMarks());
-        existing.setChoices(question.getChoices());
+        if (StringUtils.isNotEmpty(question.getText())) {
+            existing.setText(question.getText());
+        }
+        if (question.getMarks() != null) {
+            existing.setMarks(question.getMarks());
+        }
+        if (question.getChoices() != null && !question.getChoices().isEmpty()) {
+            existing.setChoices(question.getChoices());
+        }
         return questionRepo.save(existing);
     }
 

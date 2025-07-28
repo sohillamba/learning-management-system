@@ -1,8 +1,10 @@
 package com.lms.lms.controllers;
 
+import com.lms.lms.dto.CourseDTO;
 import com.lms.lms.entities.Course;
 import com.lms.lms.services.CourseService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,7 @@ public class CourseController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public Course createCourse(@RequestBody Course course) {
         return courseService.create(course);
     }
@@ -36,7 +39,7 @@ public class CourseController {
     }
 
     @GetMapping("/{id}/content")
-    public Course getCourseWithContent(@PathVariable Long id) {
+    public CourseDTO getCourseWithContent(@PathVariable Long id) {
         return courseService.getWithContent(id);
     }
 

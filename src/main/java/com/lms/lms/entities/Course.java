@@ -1,22 +1,18 @@
 package com.lms.lms.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lms.lms.entities.enrollment.Enrollment;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
+@Data
 @Entity
 @Table(name = "courses")
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Course {
@@ -38,12 +34,20 @@ public class Course {
     @Column(name = "price", nullable = false)
     private Double price;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Lesson> lessons = new ArrayList<>();
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OrderBy("id ASC")
+    @BatchSize(size = 10)
+    @JsonIgnore
+    private Set<Lesson> lessons = new HashSet<>();
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Quiz> quizzes = new ArrayList<>();
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OrderBy("id ASC")
+    @BatchSize(size = 10)
+    @JsonIgnore
+    private Set<Quiz> quizzes = new HashSet<>();
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @BatchSize(size = 10)
+    @JsonIgnore
     private Set<Enrollment> enrollments = new HashSet<>();
 }

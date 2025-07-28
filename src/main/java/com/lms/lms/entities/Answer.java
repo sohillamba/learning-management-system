@@ -1,5 +1,6 @@
 package com.lms.lms.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,14 +16,17 @@ public class Answer {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "attempt_id")
+    @JsonIgnore
     private QuizAttempt attempt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
+    @JsonIgnore
     private Question question;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "choice_id")
+    @JsonIgnore
     private Choice choice;
 
     @Column(name = "awarded_marks")

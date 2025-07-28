@@ -1,7 +1,9 @@
 package com.lms.lms.services.impl;
 
+import com.lms.lms.dto.CourseDTO;
 import com.lms.lms.entities.Course;
 import com.lms.lms.exception.ResourceNotFoundException;
+import com.lms.lms.mappers.EntityMapper;
 import com.lms.lms.repo.CourseRepository;
 import com.lms.lms.services.CourseService;
 import org.springframework.stereotype.Service;
@@ -14,9 +16,11 @@ import java.util.List;
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepo;
+    private final EntityMapper entityMapper;
 
-    public CourseServiceImpl (CourseRepository courseRepo) {
+    public CourseServiceImpl (CourseRepository courseRepo, EntityMapper entityMapper) {
         this.courseRepo = courseRepo;
+        this.entityMapper = entityMapper;
     }
 
     @Override
@@ -36,9 +40,10 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course getWithContent(Long courseId) {
+    public CourseDTO getWithContent(Long courseId) {
         if (courseId == null) throw new IllegalArgumentException("Course ID must not be null");
-        return courseRepo.findByIdWithContent(courseId).orElseThrow(() -> new ResourceNotFoundException("Course not found with id " + courseId));
+        Course course = courseRepo.findByIdWithContent(courseId).orElseThrow(() -> new ResourceNotFoundException("Course not found with id " + courseId));
+        return entityMapper.toCourseDTO(course);
     }
 
     @Override

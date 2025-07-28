@@ -1,5 +1,6 @@
 package com.lms.lms.services;
 
+import com.lms.lms.dto.CourseDTO;
 import com.lms.lms.entities.Course;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface CourseService {
 
     Course getById(Long id);
 
-    Course getWithContent(Long courseId);
+    CourseDTO getWithContent(Long courseId);
 
     Course update(Long id, Course course);
 
