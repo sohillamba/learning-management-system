@@ -45,14 +45,16 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
         try {
-            Authentication auth = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
-            authManager.authenticate(auth);
-
+            Authentication authentication = authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getPassword()
+                    )
+            );
             UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
-            String token = jwtUtil.generateToken(userDetails.getUsername());
-
+            String token = jwtUtil.generateToken(userDetails);
             return ResponseEntity.ok(new AuthResponse(token));
-        } catch (BadCredentialsException e) {
+        } catch (BadCredentialsException ex) {
             return ResponseEntity.status(401).body("Invalid username or password");
         }
     }
