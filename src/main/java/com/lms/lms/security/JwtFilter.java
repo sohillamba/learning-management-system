@@ -8,6 +8,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtParser jwtParser;
 
@@ -41,7 +43,7 @@ public class JwtFilter extends OncePerRequestFilter {
                         new UsernamePasswordAuthenticationToken(username, null, auths)
                 );
             } catch (JwtException ex) {
-                // invalid token
+                log.warn("JWT parse failed for token [{}]: {}", auth.substring(7), ex.getMessage());
             }
         }
         chain.doFilter(req, res);

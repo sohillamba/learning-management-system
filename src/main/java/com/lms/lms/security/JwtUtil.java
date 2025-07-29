@@ -22,12 +22,7 @@ public class JwtUtil {
     private String secret;
 
     private Key getSigningKey() {
-        byte[] keyBytes;
-        if (secret.trim().matches("^[A-Za-z0-9+/=]+$")) {
-            keyBytes = Decoders.BASE64.decode(secret);
-        } else {
-            keyBytes = secret.getBytes(StandardCharsets.UTF_8);
-        }
+        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

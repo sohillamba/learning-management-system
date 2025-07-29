@@ -38,8 +38,8 @@ public class AuthController {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(request.isAdmin() ? Role.ADMIN : Role.USER);
-        userRepo.save(user);
-        return ResponseEntity.ok("User registered successfully");
+        User savedUser = userRepo.save(user);
+        return ResponseEntity.ok(savedUser);
     }
 
     @PostMapping("/login")

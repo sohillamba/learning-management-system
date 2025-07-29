@@ -1,7 +1,9 @@
 package com.lms.lms.config;
 
 import com.lms.lms.security.JwtFilter;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.nio.charset.StandardCharsets;
+import java.security.Key;
 
 
 @Configuration
@@ -42,9 +45,13 @@ public class SecurityConfig {
 
     @Bean
     JwtFilter jwtFilter() {
-        return new JwtFilter(Jwts.parserBuilder()
-                .setSigningKey(secret.getBytes(StandardCharsets.UTF_8))
-                .build());
+        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
+        Key key = Keys.hmacShaKeyFor(keyBytes);
+
+        JwtParser parser = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build();
+        return new JwtFilter(parser);
     }
 
     @Bean
